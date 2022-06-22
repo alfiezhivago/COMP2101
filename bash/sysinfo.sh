@@ -1,17 +1,29 @@
 #my system informatiom
-echo -----------------------------------System information--------------------------------------
 
 #to display hostname
-echo "Host Name:" $(hostname)
+Myhostname=$(hostname)
 
-echo Operating System name and version:
+#by using hostname parameter to get domain name
+Domain_Name=$(hostname -d)
 
-cat /etc/os-release | grep -w PRETTY_NAME=
-#to see ipv4 and used grep to select a particular line. then used awk to grab second word
-echo "Ip Address:" $(ip a s ens33 | grep -w inet | awk '{print $2}')
-#to see amount of space available in the root file,displayed in human readable form
-echo "Root Filesystem Status:"
+#to get operating system and version
+OS=$(lsb_release -ds)
 
-df -h | grep -w Filesystem
+#to get ip address
+ip_address=$(hostname -I)
 
-df -h | grep -w /dev/sda3
+#to print the disk usage
+filesystem=$(df -h | grep /dev/sda3 | awk '{print $4}')
+
+cat <<EOF
+
+Report for $Myhostname
+======================================
+
+Domain Name        :$Domain_Name
+Operating System And version :$OS
+Ip Address :$ip_address
+Root FIlesystem Free Space:$filesystem
+
+======================================
+EOF
